@@ -1,49 +1,116 @@
-from fastapi import FastAPI, Query
-from fastapi.middleware.cors import CORSMiddleware
-import requests
-from bs4 import BeautifulSoup
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Dict
+import re
 
-app = FastAPI()
+app = FastAPI(title="Sentiment Analysis API", version="1.0.0")
 
-# Enable CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class SentimentRequest(BaseModel):
+    sentences: List[str]
 
-@app.get("/api/outline")
-def get_country_outline(country: str = Query(..., description="Country name")):
-    # Format Wikipedia URL properly
-    url = f"https://en.wikipedia.org/wiki/{country.replace(' ', '_')}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                      "AppleWebKit/537.36 (KHTML, like Gecko) "
-                      "Chrome/122.0 Safari/537.36"
-    }
+class SentimentResult(BaseModel):
+    sentence: str
+    sentiment: str
 
+class SentimentResponse(BaseModel):
+    results: List[SentimentResult]
+
+# Sentiment dictionaries
+HAPPY_WORDS = {
+    'love', 'like', 'great', 'good', 'awesome', 'amazing', 'fantastic', 'wonderful',
+    'excellent', 'perfect', 'happy', 'joy', 'pleased', 'delighted', 'brilliant',
+    'outstanding', 'superb', 'marvelous', 'terrific', 'fabulous', 'smile', 'laugh',
+    'enjoy', 'adore', 'wonderful', 'bliss', 'ecstatic', 'thrilled', 'positive'
+}
+
+SAD_WORDS = {
+    'hate', 'terrible', 'awful', 'bad', 'horrible', 'sad', 'angry', 'mad', 'upset',
+    'disappointed', 'frustrated', 'annoyed', 'depressed', 'miserable', 'unhappy',
+    'dislike', 'despise', 'loathe', 'regret', 'sorry', 'cry', 'tears', 'grief',
+    'sorrow', 'pain', 'suffering', 'negative', 'worst', 'hateful', 'awful'
+}
+
+POSITIVE_EMOJIS = {':)', ':-)', '😊', '😄', '😍', '🤗', '👍', '🥰', '😁', '🙂'}
+NEGATIVE_EMOJIS = {':(', ':-(', '😢', '😭', '😠', '👎', '😞', '💔', '😤', '😔'}
+
+def analyze_sentiment(sentence: str) -> str:
+    """
+    Analyze sentiment using rule-based approach with word matching and patterns
+    """
+    sentence_lower = sentence.lower().strip()
+    
+    # Check for emojis first
+    for emoji in POSITIVE_EMOJIS:
+        if emoji in sentence:
+            return "happy"
+    for emoji in NEGATIVE_EMOJIS:
+        if emoji in sentence:
+            return "sad"
+    
+    # Count positive and negative words
+    positive_count = 0
+    negative_count = 0
+    
+    words = re.findall(r'\b\w+\b', sentence_lower)
+    
+    for word in words:
+        if word in HAPPY_WORDS:
+            positive_count += 1
+        if word in SAD_WORDS:
+            negative_count += 1
+    
+    # Check for intensifiers and negations
+    if any(word in sentence_lower for word in ['not', "n't", 'no', 'never']):
+        # Simple negation handling - swap counts if negation is present
+        positive_count, negative_count = negative_count, positive_count
+    
+    # Check for exclamation marks and question marks
+    if '!' in sentence and positive_count > 0:
+        positive_count += 1
+    if '?' in sentence and negative_count > 0:
+        negative_count += 1
+    
+    # Determine sentiment based on counts
+    if positive_count > negative_count:
+        return "happy"
+    elif negative_count > positive_count:
+        return "sad"
+    else:
+        return "neutral"
+
+@app.post("/sentiment", response_model=SentimentResponse)
+async def analyze_batch_sentiment(request: SentimentRequest):
+    """
+    Analyze sentiment for multiple sentences in batch
+    """
     try:
-        res = requests.get(url, headers=headers, timeout=10)
-        res.raise_for_status()
+        results = []
+        
+        for sentence in request.sentences:
+            if not sentence or not sentence.strip():
+                # Handle empty sentences as neutral
+                sentiment = "neutral"
+            else:
+                sentiment = analyze_sentiment(sentence)
+            
+            results.append({
+                "sentence": sentence,
+                "sentiment": sentiment
+            })
+        
+        return {"results": results}
+    
     except Exception as e:
-        return {"error": f"Could not fetch Wikipedia page for '{country}'", "details": str(e)}
+        raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
 
-    soup = BeautifulSoup(res.text, "html.parser")
+@app.get("/")
+async def root():
+    return {"message": "Sentiment Analysis API is running", "version": "1.0.0"}
 
-    headings = []
-    for level in range(1, 7):  # h1 to h6
-        for h in soup.find_all(f"h{level}"):
-            text = h.get_text().strip()
-            if text and "See also" not in text:
-                headings.append((level, text))
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
-    if not headings:
-        return {"error": f"No headings found for '{country}'"}
-
-    markdown_outline = "## Contents\n\n"
-    for level, text in headings:
-        markdown_outline += f"{'#' * level} {text}\n\n"
-
-    return {"country": country, "outline": markdown_outline}
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
