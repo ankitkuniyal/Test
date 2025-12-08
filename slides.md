@@ -2,7 +2,7 @@
 marp: true
 theme: corp-theme
 paginate: true
-footer: "Product Docs · Page $[page] / $[total]"
+footer: "Product Documentation · Page $[page] / $[total]"
 math: mathjax
 ---
 
@@ -13,57 +13,27 @@ math: mathjax
 /* @theme corp-theme */
 
 section {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f8fafc;
   color: #0f172a;
-  background-color: #f9fafb;
+  padding: 2rem;
 }
 
-section.lead h1 {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #0b1120;
+h1, h2 {
+  color: #0f172a;
 }
 
-section h2 {
-  color: #111827;
-}
-
-section p,
-section li {
-  font-size: 1rem;
-}
-
-/* Accent elements */
 .accent {
   color: #2563eb;
-  font-weight: 600;
+  font-weight: bold;
 }
 
-/* Code styling */
 pre code {
-  font-size: 0.85rem;
-  line-height: 1.4;
-  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  padding: 10px;
 }
 
-/* Table styling */
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-th,
-td {
-  border: 1px solid #e5e7eb;
-  padding: 0.4rem 0.6rem;
-}
-
-th {
-  background-color: #e5e7eb;
-}
-
-/* Footer styling for page numbers */
 footer {
   color: #6b7280;
   font-size: 0.7rem;
@@ -73,41 +43,55 @@ footer {
 ---
 
 <!-- _class: lead -->
-
-# Product Documentation:  
-Interactive Developer Platform
-
-**Technical Writer – Software Division**
-
-Contact: **23f2004089@ds.study.iitm.ac.in**
+# Product Documentation Presentation  
+### Software Engineering Division  
+Email: **23f2004089@ds.study.iitm.ac.in**
 
 ---
 
-## Goals of This Documentation
+# Overview
 
-- Provide clear onboarding for new developers  
-- Make documentation **version-controlled**, reviewable, and testable  
-- Ensure easy export to:
-  - HTML slides
-  - PDF manuals
-  - Static website documentation
-
-> Maintained as a single `slides.md` file in Git, rendered with **Marp**.
+- Version-controlled documentation  
+- Compatible with CI/CD pipelines  
+- Export to **HTML, PDF, PPTX**  
+- Uses **Marp Markdown** for maintainability  
 
 ---
 
-## Architecture Overview
+# Architecture Summary
 
-- Monolithic core refactored into **microservices**
-- Public API gateway for external integrations
-- Internal services:
-  - Authentication & Authorization
-  - Billing & Usage Tracking
-  - Analytics & Reporting
+- Microservice-based backend  
+- REST + GraphQL API layer  
+- Authentication, Billing, Analytics modules  
 
-```mermaid
-flowchart LR
-    client[Client Apps] --> gateway[API Gateway]
-    gateway --> auth[Auth Service]
-    gateway --> billing[Billing Service]
-    gateway --> analytics[Analytics Service]
+---
+
+# Mathematical Equation
+
+Algorithmic Time Complexity:
+
+\[
+T(n) = O(n \log n)
+\]
+
+Space Complexity:
+
+\[
+S(n) = O(1)
+\]
+
+---
+
+# Code Example (JS SDK)
+
+```js
+import { Client } from "@company/sdk";
+
+const client = new Client({ key: process.env.API_KEY });
+
+async function run() {
+  const usage = await client.usage.get();
+  console.log("Usage:", usage);
+}
+
+run();
