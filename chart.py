@@ -95,8 +95,9 @@ def create_marketing_scatterplot(df):
     sns.set_style("whitegrid")
     sns.set_context("notebook", font_scale=1.2)
     
-    # Create figure with square dimensions for 512x512 output
-    plt.figure(figsize=(8, 8))
+    # Create figure with EXACT dimensions for 512x512 output
+    # Using figsize=(6.4, 6.4) and dpi=80 gives exactly 512x512
+    fig = plt.figure(figsize=(6.4, 6.4), dpi=80, facecolor='white')
     
     # Define custom color palette for campaign types
     campaign_palette = {
@@ -113,7 +114,7 @@ def create_marketing_scatterplot(df):
         y='Conversion_Rate',
         hue='Campaign_Type',
         size='Engagement_Score',
-        sizes=(50, 300),  # Range of bubble sizes
+        sizes=(30, 200),  # Smaller range for square format
         alpha=0.7,
         edgecolor='black',
         linewidth=0.5,
@@ -123,34 +124,35 @@ def create_marketing_scatterplot(df):
     
     # Customize the plot appearance
     plt.title(
-        'Marketing Campaign Effectiveness Analysis\n' +
-        'Spend vs. Conversion Rate by Campaign Type',
-        fontsize=16,
+        'Marketing Campaign Effectiveness\nSpend vs. Conversion Rate',
+        fontsize=14,
         fontweight='bold',
-        pad=20
+        pad=15
     )
     
     plt.xlabel(
-        'Marketing Spend (Thousands of Dollars)',
-        fontsize=13,
+        'Marketing Spend (Thousands $)',
+        fontsize=12,
         fontweight='medium'
     )
     
     plt.ylabel(
         'Conversion Rate (%)',
-        fontsize=13,
+        fontsize=12,
         fontweight='medium'
     )
     
     # Add grid for better readability
     plt.grid(True, alpha=0.3, linestyle='--')
     
-    # Customize legend
+    # Customize legend - position it better for square format
     legend = plt.legend(
         title='Campaign Type',
-        title_fontsize='12',
-        fontsize='11',
-        loc='upper right',
+        title_fontsize='11',
+        fontsize='10',
+        loc='upper left',
+        bbox_to_anchor=(1.02, 1),  # Move legend outside plot
+        borderaxespad=0.,
         frameon=True,
         framealpha=0.9,
         edgecolor='black'
@@ -161,42 +163,26 @@ def create_marketing_scatterplot(df):
     
     # Add annotation for key insight
     plt.annotate(
-        'Digital campaigns show\noptimal spend-to-conversion ratio',
+        'Digital: Optimal ROI',
         xy=(45, 8.5),
-        xytext=(60, 11),
+        xytext=(70, 10),
         arrowprops=dict(
             arrowstyle='->',
             color='#2E86AB',
-            lw=2
+            lw=1.5
         ),
-        fontsize=11,
+        fontsize=10,
         bbox=dict(boxstyle="round,pad=0.3", facecolor="#2E86AB", alpha=0.1)
     )
-    
-    # Add a trend line for Digital campaigns
-    digital_df = df[df['Campaign_Type'] == 'Digital']
-    if len(digital_df) > 1:
-        z = np.polyfit(digital_df['Marketing_Spend_K'], 
-                      digital_df['Conversion_Rate'], 1)
-        p = np.poly1d(z)
-        plt.plot(digital_df['Marketing_Spend_K'], 
-                p(digital_df['Marketing_Spend_K']),
-                color='#2E86AB',
-                linestyle='--',
-                alpha=0.5,
-                label='Digital Trend')
     
     # Set axis limits for better visualization
     plt.xlim(0, 160)
     plt.ylim(0, 16)
     
-    # Add subtle background color
-    plt.gca().set_facecolor('#F8F9FA')
+    # Adjust layout to make room for legend
+    plt.subplots_adjust(right=0.75)  # Make space for legend on the right
     
-    # Tight layout for better spacing
-    plt.tight_layout()
-    
-    return plt.gcf()
+    return fig
 
 def main():
     """Main function to generate and save the visualization."""
@@ -212,12 +198,26 @@ def main():
     fig = create_marketing_scatterplot(df)
     
     # Save the figure with exact 512x512 pixel dimensions
-    # dpi=64 with 8x8 inches gives 512x512 (64 * 8 = 512)
     print("\nSaving chart as 'chart.png' (512x512 pixels)...")
+    
+    # Method 1: Save with exact dimensions
+    # Remove bbox_inches='tight' to maintain exact size
     fig.savefig(
         'chart.png',
-        dpi=64,  # 64 DPI × 8 inches = 512 pixels
-        bbox_inches='tight',
+        dpi=80,  # 80 DPI × 6.4 inches = 512 pixels
+        bbox_inches=None,  # Do NOT use tight bounding box
+        pad_inches=0.1,    # Small padding instead
+        facecolor='white',
+        edgecolor='none'
+    )
+    
+    # Alternative method using set_size_inches
+    fig.set_size_inches(6.4, 6.4)  # Exactly 6.4 inches
+    
+    # Save again with exact dimensions
+    fig.savefig(
+        'chart.png',
+        dpi=80,
         facecolor='white',
         edgecolor='none'
     )
@@ -231,7 +231,22 @@ def main():
     if width == 512 and height == 512:
         print("✓ Successfully created 512×512 pixel visualization!")
     else:
-        print(f"✗ Warning: Image dimensions are {width}×{height}, expected 512×512")
+        print(f"✗ Image dimensions are {width}×{height}, trying alternative method...")
+        
+        # Force exact dimensions using PIL
+        img = Image.open('chart.png')
+        img_resized = img.resize((512, 512), Image.Resampling.LANCZOS)
+        img_resized.save('chart.png')
+        
+        # Verify again
+        img_final = Image.open('chart.png')
+        width_final, height_final = img_final.size
+        print(f"Final image dimensions: {width_final}×{height_final} pixels")
+        
+        if width_final == 512 and height_final == 512:
+            print("✓ Successfully resized to 512×512 pixels!")
+        else:
+            print("✗ Could not achieve 512×512 dimensions")
     
     # Display summary statistics
     print("\n=== Campaign Performance Summary ===")
