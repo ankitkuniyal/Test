@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Quarterly Earnings Report - Interactive Deck</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- Reveal.js core styles -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css" id="theme" />
+
+    <!-- Code syntax highlighting theme -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/plugin/highlight/monokai.css" />
+    <style>
+      .subtitle {
+        font-size: 0.7em;
+        margin-top: 0.5em;
+        opacity: 0.8;
+      }
+      .metric {
+        font-size: 1.3em;
+        margin-bottom: 0.3em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- Slide 1: Title -->
+        <section>
+          <h1>Q3 FY 2025<br />Earnings Report</h1>
+          <p class="subtitle">
+            Technical Consultant – Major Financial Institution
+          </p>
+          <p class="subtitle">
+            Contact: <strong>23f2004089@ds.study.iitm.ac.in</strong>
+          </p>
+
+          <aside class="notes">
+            Welcome everyone. This deck showcases both the key Q3 results and a
+            modern, interactive presentation using Reveal.js. I’ll walk through
+            performance highlights, key metrics, and a quick look at our
+            analytics tooling.
+          </aside>
+        </section>
+
+        <!-- Slide 2: Agenda (with fragments) -->
+        <section>
+          <h2>Agenda</h2>
+          <ul>
+            <li class="fragment fade-in">Business &amp; market overview</li>
+            <li class="fragment fade-in">Key financial metrics</li>
+            <li class="fragment fade-in">Earnings &amp; margin analysis</li>
+            <li class="fragment fade-in">Technical analytics demo (code)</li>
+            <li class="fragment fade-in">Outlook &amp; Q&amp;A</li>
+          </ul>
+
+          <aside class="notes">
+            Use fragments here to step through the agenda one item at a time,
+            giving context as you go instead of showing everything at once.
+          </aside>
+        </section>
+
+        <!-- Slide 3: Key Metrics (animated fragments) -->
+        <section>
+          <h2>Key Financial Highlights</h2>
+          <p class="fragment fade-in metric">
+            <strong>Revenue:</strong> ₹ 12,300 Cr <span style="font-size:0.7em;">(+8.4% YoY)</span>
+          </p>
+          <p class="fragment fade-in metric">
+            <strong>Net Income:</strong> ₹ 2,150 Cr <span style="font-size:0.7em;">(+6.1% YoY)</span>
+          </p>
+          <p class="fragment fade-in metric">
+            <strong>EPS:</strong> ₹ 32.4 <span style="font-size:0.7em;">(+5.7% YoY)</span>
+          </p>
+          <p class="fragment fade-in metric">
+            <strong>Cost-to-Income Ratio:</strong> 47.8% <span style="font-size:0.7em;">(-120 bps YoY)</span>
+          </p>
+
+          <aside class="notes">
+            Reveal each metric with a fragment and briefly explain the story:
+            revenue growth vs. last year, earnings leverage, and operational
+            efficiency via cost-to-income ratio.
+          </aside>
+        </section>
+
+        <!-- Slide 4: MARKDOWN SLIDE -->
+        <!-- At least one slide written in Markdown -->
+        <section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+          <textarea data-template>
+### Business Overview – Q3 FY 2025
+
+- Core banking and lending portfolios remained stable  
+- Strong growth in **retail digital transactions**  
+- Improved risk-adjusted returns in corporate book  
+- Continued investment in:
+  - Data platforms &amp; analytics
+  - AI-powered credit and fraud models
+  - Cloud-native microservices for faster product rollout
+
+> _Note:_ This slide is rendered from **Markdown**, demonstrating RevealJS markdown support.
+          </textarea>
+
+          <aside class="notes">
+            Call out that this slide is authored in Markdown, which is helpful
+            for quickly iterating content or collaborating via GitHub.
+          </aside>
+        </section>
+
+        <!-- Slide 5: Mathematical Equation (financial formula) -->
+        <section>
+          <h2>Valuation &amp; Cash Flow</h2>
+          <p>Present Value (PV) of future cash flows:</p>
+          <p>
+            \[
+              PV = \sum_{t=1}^{T} \frac{CF_t}{(1 + r)^t}
+            \]
+          </p>
+          <p class="fragment fade-in">
+            Where:
+          </p>
+          <ul>
+            <li class="fragment fade-in">\( CF_t \): cash flow in period \( t \)</li>
+            <li class="fragment fade-in">\( r \): discount rate / cost of equity</li>
+            <li class="fragment fade-in">\( T \): projection horizon</li>
+          </ul>
+
+          <aside class="notes">
+            This slide uses MathJax via the Reveal.js math plugin. Explain how
+            we discount projected cash flows to evaluate business lines or
+            portfolios, and how the discount rate reflects risk.
+          </aside>
+        </section>
+
+        <!-- Slide 6: Code sample with syntax highlighting -->
+        <section>
+          <h2>Analytics Snippet – CAGR Calculation</h2>
+          <p>Example: computing revenue CAGR from Q3 FY 2021 to Q3 FY 2025.</p>
+
+          <pre><code class="language-python">
+def compute_cagr(begin_value, end_value, years):
+    """
+    Compute Compound Annual Growth Rate (CAGR).
+    """
+    return (end_value / begin_value) ** (1 / years) - 1
+
+revenue_2021 = 8200   # ₹ Cr
+revenue_2025 = 12300  # ₹ Cr
+years = 4
+
+cagr = compute_cagr(revenue_2021, revenue_2025, years)
+print(f"CAGR: {cagr:.2%}")
+          </code></pre>
+
+          <p class="fragment fade-in">
+            Output example: <code>CAGR: 10.28%</code>
+          </p>
+
+          <aside class="notes">
+            Highlight that this is a minimal Python example showing how we
+            compute CAGR in our analytics pipelines. Mention that the real
+            implementation uses production data sources, validation, and
+            dashboards.
+          </aside>
+        </section>
+
+        <!-- Slide 7: Technical architecture (with fragments & notes) -->
+        <section>
+          <h2>Reporting Architecture</h2>
+          <ul>
+            <li class="fragment fade-in">Data ingestion from core banking, CRM, and trading systems</li>
+            <li class="fragment fade-in">ETL into central data lake &amp; warehouse</li>
+            <li class="fragment fade-in">Analytics layer in Python / SQL / BI tools</li>
+            <li class="fragment fade-in">Exported KPIs rendered in this Reveal.js deck</li>
+          </ul>
+
+          <aside class="notes">
+            Emphasize the end-to-end flow: from raw transactional data to
+            curated KPIs and how this interactive deck is the presentation
+            layer on top of that stack.
+          </aside>
+        </section>
+
+        <!-- Slide 8: Closing -->
+        <section>
+          <h2>Outlook &amp; Q&amp;A</h2>
+          <ul>
+            <li class="fragment fade-in">Focus on profitable growth &amp; capital efficiency</li>
+            <li class="fragment fade-in">Further digitization of customer journeys</li>
+            <li class="fragment fade-in">Ongoing investments in AI &amp; risk analytics</li>
+          </ul>
+          <p class="fragment fade-in">
+            For follow-up questions:<br />
+            <strong>23f2004089@ds.study.iitm.ac.in</strong>
+          </p>
+
+          <aside class="notes">
+            Invite questions and mention that the deck is hosted on GitHub
+            Pages for easy access and version control.
+          </aside>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Reveal.js core -->
+    <script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+
+    <!-- Plugins: Markdown, Highlight, Math, Notes -->
+    <script src="https://unpkg.com/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="https://unpkg.com/reveal.js/plugin/highlight/highlight.js"></script>
+    <script src="https://unpkg.com/reveal.js/plugin/math/math.js"></script>
+    <script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+
+    <script>
+      Reveal.initialize({
+        hash: true, // enables direct linking to slides
+        slideNumber: true,
+        plugins: [RevealMarkdown, RevealHighlight, RevealMath, RevealNotes],
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          tex: {
+            inlineMath: [['\\(', '\\)'], ['$', '$']]
+          }
+        },
+        highlight: {
+          // auto-highlight code blocks
+          highlightOnLoad: true
+        }
+      });
+    </script>
+  </body>
+</html>
