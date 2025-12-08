@@ -2,18 +2,18 @@
 marp: true
 theme: corp-theme
 paginate: true
-footer: "Product Documentation · Page $[page] / $[total]"
+footer: "Product Docs · Page $[page] / $[total]"
 math: mathjax
 ---
 
 <style>
-/* ---------------------------------------
- * Custom Marp Theme: corp-theme
- * ------------------------------------- */
+/* ================================
+   Custom Marp Theme: corp-theme
+   ================================ */
 /* @theme corp-theme */
 
 section {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #f8fafc;
   color: #0f172a;
   padding: 2rem;
@@ -29,9 +29,11 @@ h1, h2 {
 }
 
 pre code {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border-radius: 8px;
   padding: 10px;
+  background: #0f172a;
+  color: #f8fafc;
 }
 
 footer {
@@ -43,32 +45,37 @@ footer {
 ---
 
 <!-- _class: lead -->
+
 # Product Documentation Presentation  
 ### Software Engineering Division  
-Email: **23f2004089@ds.study.iitm.ac.in**
+
+Contact: **23f2004089@ds.study.iitm.ac.in**
 
 ---
 
-# Overview
+## Documentation Goals
 
-- Version-controlled documentation  
-- Compatible with CI/CD pipelines  
-- Export to **HTML, PDF, PPTX**  
-- Uses **Marp Markdown** for maintainability  
-
----
-
-# Architecture Summary
-
-- Microservice-based backend  
-- REST + GraphQL API layer  
-- Authentication, Billing, Analytics modules  
+- Version-controlled **Markdown** source  
+- Exportable to **PDF, HTML, PPTX**  
+- Developer-friendly contribution workflow  
+- Easy CI/CD integration
 
 ---
 
-# Mathematical Equation
+## System Architecture
 
-Algorithmic Time Complexity:
+- Distributed microservices  
+- Central API Gateway  
+- Auth, Billing, Monitoring services  
+- Versioned public SDKs
+
+---
+
+## Algorithmic Complexity Example
+
+We highlight algorithmic complexity for core data-processing steps.
+
+Time Complexity:
 
 \[
 T(n) = O(n \log n)
@@ -82,16 +89,18 @@ S(n) = O(1)
 
 ---
 
-# Code Example (JS SDK)
+## Example API Usage
 
 ```js
 import { Client } from "@company/sdk";
 
-const client = new Client({ key: process.env.API_KEY });
+const client = new Client({
+  apiKey: process.env.DOCS_API_KEY
+});
 
-async function run() {
-  const usage = await client.usage.get();
-  console.log("Usage:", usage);
+async function load() {
+  const data = await client.usage.summary();
+  console.log("Usage:", data);
 }
 
-run();
+load();
